@@ -10,10 +10,9 @@ void main() {
 
   runApp(MaterialApp(
     themeMode: ThemeMode.dark,
-    darkTheme: ThemeData.dark().copyWith(
-      textTheme: GoogleFonts.bungeeHairlineTextTheme(),
-      scaffoldBackgroundColor: Colors.black,
-    ),
+    // Use custom theme with 'BungeeInline' font.
+    darkTheme:
+        ThemeData(brightness: Brightness.dark, fontFamily: 'BungeeInline'),
     home: const MainMenu(),
   ));
 }

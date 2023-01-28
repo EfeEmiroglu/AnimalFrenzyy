@@ -69,6 +69,11 @@ flutter:
     - assets/images/egg.png
     - assets/images/shootSprite.png
     - assets/images/chickenHit.png
+    - assets/images/wolfSprite.png
+  fonts:
+    - family: BungeeInline
+      fonts:
+        - asset: assets/fonts/BungeeInline-Regular.ttf
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -32,6 +32,7 @@ class ChickenGame extends FlameGame
   late SpriteComponent background;
   final Vector2 buttonSize = Vector2(50, 50);
   late SpriteSheet spriteSheet;
+  late SpriteSheet eggImage;
   static bool shootButtonPressed = false;
   late MyBall ball;
   late EnemyManager enemyManager;
@@ -50,6 +51,10 @@ class ChickenGame extends FlameGame
     await images.load('shootSprite.png');
     spriteSheet = SpriteSheet.fromColumnsAndRows(
         image: images.fromCache('shootSprite.png'), columns: 8, rows: 6);
+
+    await images.load('egg.png');
+    eggImage = SpriteSheet.fromColumnsAndRows(
+        image: images.fromCache('egg.png'), columns: 8, rows: 6);
 
     background = SpriteComponent()
       ..sprite = await loadSprite('pixelGrassImage.png')
@@ -101,7 +106,7 @@ class ChickenGame extends FlameGame
 
     playerHealth = TextComponent(
       text: 'Health: 100%',
-      position: Vector2(size.x - 25, 10),
+      position: Vector2(size.x - 10, 10),
       textRenderer: TextPaint(
         style: const TextStyle(
           color: Colors.white,
