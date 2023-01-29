@@ -70,6 +70,7 @@ flutter:
     - assets/images/shootSprite.png
     - assets/images/chickenHit.png
     - assets/images/wolfSprite.png
+    - assets/images/pigRun.png
   fonts:
     - family: BungeeInline
       fonts:

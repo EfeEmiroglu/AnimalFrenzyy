@@ -26,7 +26,7 @@ class ChickenGame extends FlameGame
         CollisionCallbacks,
         HasGameRef {
   double chickenScaleFactor = 2.0;
-  static late SpriteAnimationComponent chicken;
+  static late SpriteAnimationComponent chicken, pig;
   late final JoystickComponent joyStick;
   static bool chickenFlipped = false;
   late SpriteComponent background;
@@ -36,13 +36,14 @@ class ChickenGame extends FlameGame
   static bool shootButtonPressed = false;
   late MyBall ball;
   late EnemyManager enemyManager;
-  late Image chickenImage;
+  late Image chickenImage, pigImage;
   late TextComponent playerScore;
   late TextComponent playerHealth;
   int health = 100, score = 0;
   late TextPainter textPainter;
   TextStyle textStyle = const TextStyle(fontFamily: 'BungeeInline');
   late Offset textOffset;
+  late SpriteAnimation spriteAnimation;
 
   @override
   Future<void> onLoad() async {
@@ -60,6 +61,14 @@ class ChickenGame extends FlameGame
       ..sprite = await loadSprite('pixelGrassImage.png')
       ..size = size;
     add(background);
+
+    pigImage = (await images.load('pigRun.png'));
+    spriteAnimation = SpriteAnimation.fromFrameData(
+        pigImage,
+        SpriteAnimationData.sequenced(
+            amount: 12, stepTime: 0.5, textureSize: Vector2(32, 34)));
+    pig = SpriteAnimationComponent()..animation = spriteAnimation;
+    add(pig);
 
     // Enemy enemy = Enemy(
     //     sprite: spriteSheet.getSpriteById(6),
@@ -88,7 +97,7 @@ class ChickenGame extends FlameGame
         margin: const EdgeInsets.only(left: 150, bottom: 20));
     add(joyStick);
 
-    enemyManager = EnemyManager(spriteSheet: spriteSheet);
+    enemyManager = EnemyManager(spriteAnimation: spriteAnimation);
     add(enemyManager);
 
     playerScore = TextComponent(

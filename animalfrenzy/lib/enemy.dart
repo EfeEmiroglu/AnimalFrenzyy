@@ -4,17 +4,17 @@ import 'package:animalfrenzy/ball.dart';
 import 'package:animalfrenzy/knows_game_size.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flutter/animation.dart';
 
-class Enemy extends SpriteComponent with KnowsGameSize, CollisionCallbacks {
+class Enemy extends SpriteAnimationComponent
+    with KnowsGameSize, CollisionCallbacks {
   double speed = 250;
 
   Enemy({
-    Sprite? sprite,
+    SpriteAnimation? animation,
     Vector2? position,
     Vector2? size,
-  }) : super(sprite: sprite, position: position, size: size) {
-    angle = pi;
-  }
+  }) : super(animation: animation, position: position, size: size);
 
   @override
   update(double dt) {
@@ -26,30 +26,6 @@ class Enemy extends SpriteComponent with KnowsGameSize, CollisionCallbacks {
     //   parent?.remove(this);
     // }
   }
-
-  // @override
-  // void onMount() {
-  //   super.onMount();
-
-  //   // Adding a circular hitbox with radius as 0.8 times
-  //   // the smallest dimension of this components size.
-  //   final shape = CircleHitbox.relative(
-  //     0.8,
-  //     parentSize: size,
-  //     position: size / 2,
-  //     anchor: Anchor.center,
-  //   );
-  //   add(shape);
-  // }
-
-  // @override
-  // void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-  //   super.onCollision(intersectionPoints, other);
-
-  //   if (other is MyBall) {
-  //     removeFromParent();
-  //   }
-  // }
 
   @override
   void onRemove() {

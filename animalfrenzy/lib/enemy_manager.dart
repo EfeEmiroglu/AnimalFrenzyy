@@ -11,24 +11,23 @@ import 'mainMenu.dart';
 class EnemyManager extends Component
     with KnowsGameSize, HasGameRef<ChickenGame> {
   late Timer timer;
-  SpriteSheet spriteSheet;
+  SpriteAnimation spriteAnimation;
   Random random = Random();
+  double pigScaleFactor = 2.0;
 
-  EnemyManager({required this.spriteSheet}) : super() {
+  EnemyManager({required this.spriteAnimation}) : super() {
     timer = Timer(1, onTick: spawnEnemy, repeat: true);
   }
 
   void spawnEnemy() {
-    Vector2 initialSize = Vector2(64, 64);
+    Vector2 initialSize = Vector2(32, 34) * pigScaleFactor;
     Vector2 position = Vector2(random.nextDouble() * gameSize.x, 0);
 
-    position.clamp(
-        Vector2.zero() + initialSize / 2, gameSize - initialSize / 2);
+    // position.clamp(
+    //     Vector2.zero() + initialSize / 2, gameSize - initialSize / 2);
 
     Enemy enemy = Enemy(
-        sprite: spriteSheet.getSpriteById(13),
-        size: initialSize,
-        position: position);
+        animation: spriteAnimation, size: initialSize, position: position);
 
     enemy.anchor = Anchor.center;
 
