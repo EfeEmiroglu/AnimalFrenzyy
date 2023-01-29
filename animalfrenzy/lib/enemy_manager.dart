@@ -46,4 +46,9 @@ class EnemyManager extends Component
     super.update(dt);
     timer.update(dt);
   }
+
+  void reset() {
+    timer.stop();
+    timer.start();
+  }
 }

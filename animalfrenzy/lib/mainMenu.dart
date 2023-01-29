@@ -39,7 +39,7 @@ class ChickenGame extends FlameGame
   late Image chickenImage;
   late TextComponent playerScore;
   late TextComponent playerHealth;
-  int health = 100, score = 0;
+  static int health = 100, score = 0;
   late TextPainter textPainter;
   TextStyle textStyle = const TextStyle(fontFamily: 'BungeeInline');
   late Offset textOffset;
@@ -208,6 +208,21 @@ class ChickenGame extends FlameGame
     } else if (joyStick.relativeDelta[0] > 0 && !chickenFlipped) {
       chickenFlipped = true;
       chicken.flipHorizontallyAroundCenter();
+    }
+  }
+
+  void reset() {
+    score = 0;
+    health = 100;
+    chicken.position = Vector2(150, 500);
+    enemyManager.reset();
+
+    for (final enemy in enemyManager.children.whereType<Enemy>()) {
+      enemy.removeFromParent();
+    }
+
+    for (final bullet in children.whereType<MyBall>()) {
+      bullet.removeFromParent();
     }
   }
 }

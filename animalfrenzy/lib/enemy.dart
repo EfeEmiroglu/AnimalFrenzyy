@@ -2,10 +2,12 @@ import 'dart:math';
 
 import 'package:animalfrenzy/ball.dart';
 import 'package:animalfrenzy/knows_game_size.dart';
+import 'package:animalfrenzy/mainMenu.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
-class Enemy extends SpriteComponent with KnowsGameSize, CollisionCallbacks {
+class Enemy extends SpriteComponent
+    with HasGameRef, KnowsGameSize, CollisionCallbacks {
   double speed = 250;
 
   Enemy({
@@ -22,9 +24,14 @@ class Enemy extends SpriteComponent with KnowsGameSize, CollisionCallbacks {
 
     position += Vector2(0, 1) * speed * dt;
 
-    // if (position.y < size[1] - sprite?.image.height) {
-    //   parent?.remove(this);
-    // }
+    if (position.y > gameSize.y) {
+      parent?.remove(this);
+      ChickenGame.health -= 10;
+      gameRef.camera.shake(duration: 0.2, intensity: 2);
+      if (ChickenGame.health <= 0) {
+        ChickenGame.health = 0;
+      }
+    }
   }
 
   // @override

@@ -36,6 +36,7 @@ class MainMenu extends StatelessWidget {
                 ),
               ),
             ),
+            //Play button
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
@@ -55,20 +56,22 @@ class MainMenu extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
             ),
+            //Options button
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50.0),
-                ),
-                backgroundColor: const Color.fromARGB(255, 2, 92, 5),
-              ),
-              onPressed: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => const OptionsScreen(),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50.0),
                   ),
-                );
-              }, child: const Text('Options')),
+                  backgroundColor: const Color.fromARGB(255, 2, 92, 5),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => const OptionsScreen(),
+                    ),
+                  );
+                },
+                child: const Text('Options')),
           ]),
         ),
       ),
