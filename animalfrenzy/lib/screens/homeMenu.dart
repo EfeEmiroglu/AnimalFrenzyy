@@ -1,4 +1,5 @@
 import 'package:animalfrenzy/screens/gamePlay.dart';
+import 'package:animalfrenzy/screens/options_screen.dart';
 import 'package:flutter/material.dart';
 
 class MainMenu extends StatelessWidget {
@@ -10,7 +11,7 @@ class MainMenu extends StatelessWidget {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage("assets/images/pixelGrassImage.png"),
                 fit: BoxFit.cover)),
@@ -36,15 +37,38 @@ class MainMenu extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => const GamePlay(),
-                    ),
-                  );
-                },
-                child: Text('Play')),
-            ElevatedButton(onPressed: () {}, child: Text('Options')),
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50.0),
+                ),
+                backgroundColor: const Color.fromARGB(255, 2, 92, 5),
+              ),
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => const GamePlay(),
+                  ),
+                );
+              },
+              child: const Text(
+                'Play',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50.0),
+                ),
+                backgroundColor: const Color.fromARGB(255, 2, 92, 5),
+              ),
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => const OptionsScreen(),
+                  ),
+                );
+              }, child: const Text('Options')),
           ]),
         ),
       ),
