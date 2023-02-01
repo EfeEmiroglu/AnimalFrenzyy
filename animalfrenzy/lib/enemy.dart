@@ -6,8 +6,10 @@ import 'package:animalfrenzy/mainMenu.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
+import 'chicken.dart';
+
 class Enemy extends SpriteComponent
-    with HasGameRef, KnowsGameSize, CollisionCallbacks {
+    with HasGameRef<ChickenGame>, KnowsGameSize, CollisionCallbacks {
   double speed = 250;
 
   Enemy({
@@ -26,37 +28,39 @@ class Enemy extends SpriteComponent
 
     if (position.y > gameSize.y) {
       parent?.remove(this);
-      ChickenGame.health -= 10;
+      gameRef.chicken.health -= 10;
       gameRef.camera.shake(duration: 0.2, intensity: 2);
-      if (ChickenGame.health <= 0) {
-        ChickenGame.health = 0;
+      if (gameRef.chicken.health <= 0) {
+        gameRef.chicken.health = 0;
       }
     }
   }
 
-  // @override
-  // void onMount() {
-  //   super.onMount();
+  @override
+  void onMount() {
+    super.onMount();
 
-  //   // Adding a circular hitbox with radius as 0.8 times
-  //   // the smallest dimension of this components size.
-  //   final shape = CircleHitbox.relative(
-  //     0.8,
-  //     parentSize: size,
-  //     position: size / 2,
-  //     anchor: Anchor.center,
-  //   );
-  //   add(shape);
-  // }
+    // Adding a circular hitbox with radius as 0.8 times
+    // the smallest dimension of this components size.
+    final shape = CircleHitbox.relative(
+      0.8,
+      parentSize: size,
+      position: size / 2,
+      anchor: Anchor.center,
+    );
+    add(shape);
+  }
 
-  // @override
-  // void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-  //   super.onCollision(intersectionPoints, other);
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
 
-  //   if (other is MyBall) {
-  //     removeFromParent();
-  //   }
-  // }
+    if (other is MyBall || other is Chicken) {
+      removeFromParent();
+
+      gameRef.chicken.score += 1;
+    }
+  }
 
   @override
   void onRemove() {

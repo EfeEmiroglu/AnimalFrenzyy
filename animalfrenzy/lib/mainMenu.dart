@@ -1,6 +1,7 @@
 import 'package:animalfrenzy/ball.dart';
 import 'package:animalfrenzy/enemy_manager.dart';
 import 'package:animalfrenzy/knows_game_size.dart';
+import 'package:animalfrenzy/models/chicken_details.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -11,6 +12,7 @@ import 'package:flame/palette.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart' hide Image;
 
+import 'chicken.dart';
 import 'enemy.dart';
 
 // void main() {
@@ -26,7 +28,7 @@ class ChickenGame extends FlameGame
         CollisionCallbacks,
         HasGameRef {
   double chickenScaleFactor = 2.0;
-  static late SpriteAnimationComponent chicken;
+  late Chicken chicken;
   late final JoystickComponent joyStick;
   static bool chickenFlipped = false;
   late SpriteComponent background;
@@ -36,13 +38,14 @@ class ChickenGame extends FlameGame
   static bool shootButtonPressed = false;
   late MyBall ball;
   late EnemyManager enemyManager;
-  late Image chickenImage;
   late TextComponent playerScore;
   late TextComponent playerHealth;
   static int health = 100, score = 0;
   late TextPainter textPainter;
   TextStyle textStyle = const TextStyle(fontFamily: 'BungeeInline');
   late Offset textOffset;
+
+  late SpriteAnimation spriteComponent;
 
   @override
   Future<void> onLoad() async {
@@ -67,19 +70,6 @@ class ChickenGame extends FlameGame
     //     position: Vector2(0, -5));
     // add(enemy);
 
-    print('2 load assets for the game');
-    chickenImage = (await images.load('chicken.png'));
-
-    var chickenAnimation = SpriteAnimation.fromFrameData(
-        chickenImage,
-        SpriteAnimationData.sequenced(
-            amount: 14, stepTime: 0.2, textureSize: Vector2(32, 34)));
-    chicken = SpriteAnimationComponent()
-      ..animation = chickenAnimation
-      ..size = Vector2(32, 34) * chickenScaleFactor
-      ..position = Vector2(150, 500);
-    add(chicken);
-
     final knobPaint = BasicPalette.blue.withAlpha(200).paint();
     final backGroundPaint = BasicPalette.blue.withAlpha(100).paint();
     joyStick = JoystickComponent(
@@ -87,6 +77,23 @@ class ChickenGame extends FlameGame
         background: CircleComponent(radius: 50, paint: backGroundPaint),
         margin: const EdgeInsets.only(left: 150, bottom: 20));
     add(joyStick);
+
+    const playerType = PlayerTypes.chicken;
+    final player = Player.getPlayerByType(playerType);
+
+    print('2 load assets for the game');
+    await images.load('chicken.png');
+    spriteComponent = SpriteAnimation.fromFrameData(
+        images.fromCache('chicken.png'),
+        SpriteAnimationData.sequenced(
+            amount: 14, stepTime: 0.2, textureSize: Vector2(32, 34)));
+    chicken = Chicken(
+        joyStick: joyStick,
+        playerTypes: playerType,
+        sprite: spriteComponent,
+        size: Vector2(64, 64),
+        position: Vector2(150, 500));
+    add(chicken);
 
     enemyManager = EnemyManager(spriteSheet: spriteSheet);
     add(enemyManager);
@@ -136,14 +143,10 @@ class ChickenGame extends FlameGame
 
   @override
   void render(Canvas canvas) {
-    textPainter = TextPainter(
-        textAlign: TextAlign.center, textDirection: TextDirection.ltr)
-      ..text = TextSpan(
-          text: playerHealth.text = 'Health: ${health}%', style: textStyle)
-      ..layout();
     super.render(canvas);
 
-    canvas.drawRect(Rect.fromLTWH(size.x - 110, 30, health.toDouble(), 10),
+    canvas.drawRect(
+        Rect.fromLTWH(size.x - 110, 30, chicken.health.toDouble(), 10),
         Paint()..color = Colors.red);
 
     //textPainter.paint(canvas, Offset(size.x - 110, 10));
@@ -158,38 +161,6 @@ class ChickenGame extends FlameGame
     bool moveDown = joyStick.relativeDelta[1] > 0;
     double chickenVectorX = (joyStick.relativeDelta * 300 * dt)[0];
     double chickenVectorY = (joyStick.relativeDelta * 300 * dt)[1];
-    //chicken.position.add(joyStick.relativeDelta * 300 * dt);
-
-    final bullets = children.whereType<MyBall>();
-
-    for (final enemy in enemyManager.children.whereType<Enemy>()) {
-      // if (enemy.isRemoved) {
-      //   continue;
-      // }
-      for (final bullet in bullets) {
-        // if (bullet.isRemoved) {
-        //   continue;
-        // }
-        if (enemy.containsPoint(bullet.absoluteCenter)) {
-          enemy.removeFromParent();
-          bullet.removeFromParent();
-          score += 1;
-          break;
-        }
-      }
-      if (chicken.containsPoint(enemy.absoluteCenter)) {
-        print("player got hit");
-        health -= 10;
-        enemy.removeFromParent();
-        gameRef.camera.shake(duration: 0.2, intensity: 2);
-        if (health <= 0) {
-          health = 0;
-        }
-      }
-    }
-
-    playerScore.text = 'Score: ${score}';
-    //playerHealth.text = 'Health: ${health}%';
 
     //chicken moving on x
     if ((moveLeft && chicken.x > 0) || (moveRight && chicken.x < size[0])) {
@@ -209,20 +180,25 @@ class ChickenGame extends FlameGame
       chickenFlipped = true;
       chicken.flipHorizontallyAroundCenter();
     }
+
+    //chicken.position.add(joyStick.relativeDelta * 300 * dt);
+
+    if (chicken.isMounted) {
+      playerScore.text = 'Score: ${chicken.score}';
+      playerHealth.text = 'Health: ${chicken.health}%';
+    }
   }
 
   void reset() {
-    score = 0;
-    health = 100;
-    chicken.position = Vector2(150, 500);
+    chicken.reset();
     enemyManager.reset();
 
-    for (final enemy in enemyManager.children.whereType<Enemy>()) {
+    children.whereType<Enemy>().forEach((enemy) {
       enemy.removeFromParent();
-    }
+    });
 
-    for (final bullet in children.whereType<MyBall>()) {
+    children.whereType<MyBall>().forEach((bullet) {
       bullet.removeFromParent();
-    }
+    });
   }
 }

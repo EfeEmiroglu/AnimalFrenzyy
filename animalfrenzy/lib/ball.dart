@@ -14,30 +14,30 @@ class MyBall extends SpriteComponent with CollisionCallbacks {
     Vector2? size,
   }) : super(sprite: sprite, position: position, size: size);
 
-  // @override
-  // void onMount() {
-  //   super.onMount();
+  @override
+  void onMount() {
+    super.onMount();
 
-  //   // Adding a circular hitbox with radius as 0.4 times
-  //   //  the smallest dimension of this components size.
-  //   final shape = CircleHitbox.relative(
-  //     0.4,
-  //     parentSize: size,
-  //     position: size / 2,
-  //     anchor: Anchor.center,
-  //   );
-  //   add(shape);
-  // }
+    // Adding a circular hitbox with radius as 0.4 times
+    //  the smallest dimension of this components size.
+    final shape = CircleHitbox.relative(
+      0.4,
+      parentSize: size,
+      position: size / 2,
+      anchor: Anchor.center,
+    );
+    add(shape);
+  }
 
-  // @override
-  // void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-  //   super.onCollision(intersectionPoints, other);
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
 
-  //   // If the other Collidable is Enemy, remove this bullet.
-  //   if (other is Enemy) {
-  //     removeFromParent();
-  //   }
-  // }
+    // If the other Collidable is Enemy, remove this bullet.
+    if (other is Enemy) {
+      removeFromParent();
+    }
+  }
 
   @override
   void update(double dt) {

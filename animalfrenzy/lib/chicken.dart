@@ -9,6 +9,8 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:flame/game.dart';
 
+import 'enemy.dart';
+
 class Chicken extends SpriteAnimationComponent
     with
         KnowsGameSize,
@@ -17,8 +19,9 @@ class Chicken extends SpriteAnimationComponent
         KeyboardHandler {
   //Joystick
 
-  int _health = 100;
-  int get health => _health;
+  int health = 100;
+  //int get health => _health;
+  int score = 0;
   late Image chickenImage;
   static bool chickenFlipped = false;
   static late SpriteAnimationComponent chicken;
@@ -27,9 +30,6 @@ class Chicken extends SpriteAnimationComponent
   Player _player;
   PlayerTypes playerTypes;
   late JoystickComponent joyStick;
-
-  final knobPaint = BasicPalette.blue.withAlpha(200).paint();
-  final backGroundPaint = BasicPalette.blue.withAlpha(100).paint();
 
   Chicken({
     required this.joyStick,
@@ -41,41 +41,51 @@ class Chicken extends SpriteAnimationComponent
         super(animation: sprite, position: position, size: size);
 
   @override
-  Future<void> onLoad() async {
-    joyStick = JoystickComponent(
-        knob: CircleComponent(radius: 15, paint: knobPaint),
-        background: CircleComponent(radius: 50, paint: backGroundPaint),
-        margin: const EdgeInsets.only(left: 150, bottom: 20));
-    add(joyStick);
+  void onMount() {
+    super.onMount();
+
+    // Adding a circular hitbox with radius as 0.8 times
+    // the smallest dimension of this components size.
+    final shape = CircleHitbox.relative(
+      0.8,
+      parentSize: size,
+      position: size / 2,
+      anchor: Anchor.center,
+    );
+    add(shape);
+
+    //_playerData = Provider.of<PlayerData>(gameRef.buildContext!, listen: false);
   }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
+
+    // If other entity is an Enemy, reduce player's health by 10.
+    if (other is Enemy) {
+      // Make the camera shake, with custom intensity.
+      gameRef.camera.shake(duration: 0.2, intensity: 2);
+
+      health -= 10;
+      if (health <= 0) {
+        health = 0;
+      }
+    }
+  }
+
+  // Resets player score, health and position. Should be called
+  // while restarting and exiting the game.
+  void reset() {
+    score = 0;
+    health = 100;
+    position = gameRef.size / 2;
+  }
+
+  @override
+  Future<void> onLoad() async {}
 
   @override
   Future<void> update(double dt) async {
     super.update(dt);
-    bool moveLeft = joyStick.relativeDelta[0] < 0;
-    bool moveRight = joyStick.relativeDelta[0] > 0;
-    bool moveUp = joyStick.relativeDelta[1] < 0;
-    bool moveDown = joyStick.relativeDelta[1] > 0;
-    double chickenVectorX = (joyStick.relativeDelta * 300 * dt)[0];
-    double chickenVectorY = (joyStick.relativeDelta * 300 * dt)[1];
-
-    //chicken moving on x
-    if ((moveLeft && chicken.x > 0) || (moveRight && chicken.x < size[0])) {
-      chicken.position.add(Vector2(chickenVectorX, 0));
-    }
-
-    //chicken moving on y
-    if ((moveUp && chicken.y > 0) ||
-        (moveDown && chicken.y < size[1] - chicken.height)) {
-      chicken.position.add(Vector2(0, chickenVectorY));
-    }
-
-    if (joyStick.relativeDelta[0] < 0 && chickenFlipped) {
-      chickenFlipped = false;
-      chicken.flipHorizontallyAroundCenter();
-    } else if (joyStick.relativeDelta[0] > 0 && !chickenFlipped) {
-      chickenFlipped = true;
-      chicken.flipHorizontallyAroundCenter();
-    }
   }
 }

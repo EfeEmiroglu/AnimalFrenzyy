@@ -32,7 +32,7 @@ class EnemyManager extends Component
 
     enemy.anchor = Anchor.center;
 
-    add(enemy);
+    gameRef.add(enemy);
   }
 
   @override
