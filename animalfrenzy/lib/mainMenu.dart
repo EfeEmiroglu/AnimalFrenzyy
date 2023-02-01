@@ -125,10 +125,10 @@ class ChickenGame extends FlameGame
     super.onTapDown(info);
 
     ball = MyBall(
-        sprite: spriteSheet.getSpriteById(28),
-        size: Vector2(64, 64),
-        position: chicken.position,
-        chickenFlipped: chickenFlipped);
+      sprite: spriteSheet.getSpriteById(28),
+      size: Vector2(64, 64),
+      position: chicken.position,
+    );
 
     ball.anchor = Anchor.center;
     add(ball);

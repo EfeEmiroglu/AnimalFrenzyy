@@ -7,16 +7,12 @@ import 'enemy.dart';
 
 class MyBall extends SpriteComponent with CollisionCallbacks {
   double speed = 450;
-  late bool _chickenFlipped;
 
   MyBall({
     Sprite? sprite,
     Vector2? position,
     Vector2? size,
-    required bool chickenFlipped,
-  }) : super(sprite: sprite, position: position, size: size) {
-    _chickenFlipped = chickenFlipped;
-  }
+  }) : super(sprite: sprite, position: position, size: size);
 
   // @override
   // void onMount() {
