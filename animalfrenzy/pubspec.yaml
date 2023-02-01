@@ -30,14 +30,20 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   flame: 1.6.0
-  google_fonts: ^2.0.0
+  flame_audio: 1.3.5
+  provider: 6.0.5
+  flutter_carousel_slider: 1.1.0
+  hive: 2.2.3
+  hive_generator: 2.0.0
+  path_provider: 2.0.11
   flutter:
     sdk: flutter
+  hive_flutter: 1.1.0
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons: 1.0.5
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +76,14 @@ flutter:
     - assets/images/shootSprite.png
     - assets/images/chickenHit.png
     - assets/images/wolfSprite.png
+    - assets/images/bat.png
+    - assets/images/bee.png
+    - assets/images/blueBird.png
+    - assets/images/bunny.png
+    - assets/images/chameleon.png
+    - assets/images/duck.png
+    - assets/images/fatBird.png
+    - assets/images/ghost.png
   fonts:
     - family: BungeeInline
       fonts:
