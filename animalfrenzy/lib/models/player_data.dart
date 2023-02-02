@@ -65,8 +65,8 @@ class PlayerData extends ChangeNotifier {
   };
 
   /// Returns true if given [PlayerData] is owned by player.
-  bool isOwned(PlayerTypes spaceshipType) {
-    return ownedPlayers.contains(spaceshipType);
+  bool isOwned(PlayerTypes playerTypes) {
+    return ownedPlayers.contains(playerTypes);
   }
 
   /// Returns true if player has enough money to by given [PlayerData].

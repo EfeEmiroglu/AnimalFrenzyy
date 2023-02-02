@@ -2,6 +2,7 @@ import 'package:animalfrenzy/ball.dart';
 import 'package:animalfrenzy/enemy_manager.dart';
 import 'package:animalfrenzy/knows_game_size.dart';
 import 'package:animalfrenzy/models/chicken_details.dart';
+import 'package:animalfrenzy/models/player_data.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -11,6 +12,7 @@ import 'package:flame/image_composition.dart';
 import 'package:flame/palette.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart' hide Image;
+import 'package:provider/provider.dart';
 
 import 'chicken.dart';
 import 'enemy.dart';
@@ -45,7 +47,7 @@ class ChickenGame extends FlameGame
   TextStyle textStyle = const TextStyle(fontFamily: 'BungeeInline');
   late Offset textOffset;
 
-  late SpriteAnimation spriteComponent;
+  late SpriteAnimation spriteAnimation;
 
   @override
   Future<void> onLoad() async {
@@ -83,14 +85,14 @@ class ChickenGame extends FlameGame
 
     print('2 load assets for the game');
     await images.load('chicken.png');
-    spriteComponent = SpriteAnimation.fromFrameData(
+    spriteAnimation = SpriteAnimation.fromFrameData(
         images.fromCache('chicken.png'),
         SpriteAnimationData.sequenced(
             amount: 14, stepTime: 0.2, textureSize: Vector2(32, 34)));
     chicken = Chicken(
         joyStick: joyStick,
         playerTypes: playerType,
-        sprite: spriteComponent,
+        sprite: spriteAnimation,
         size: Vector2(64, 64),
         position: Vector2(150, 500));
     add(chicken);
@@ -125,6 +127,14 @@ class ChickenGame extends FlameGame
     );
     //playerHealth.anchor = Anchor.topRight;
     add(playerHealth);
+  }
+
+  @override
+  void onAttach() {
+    if (buildContext != null) {
+      final playerData = Provider.of<PlayerData>(buildContext!, listen: false);
+    }
+    super.onAttach();
   }
 
   @override

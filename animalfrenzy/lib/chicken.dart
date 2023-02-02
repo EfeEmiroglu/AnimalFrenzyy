@@ -24,7 +24,7 @@ class Chicken extends SpriteAnimationComponent
   int score = 0;
   late Image chickenImage;
   static bool chickenFlipped = false;
-  static late SpriteAnimationComponent chicken;
+  late SpriteAnimationComponent chicken;
   double chickenScaleFactor = 2.0;
 
   Player _player;
@@ -71,6 +71,12 @@ class Chicken extends SpriteAnimationComponent
         health = 0;
       }
     }
+  }
+
+  void setPlayerType(PlayerTypes playerTypes) {
+    playerTypes = playerTypes;
+    _player = Player.getPlayerByType(playerTypes);
+    animation = gameRef.spriteAnimation;
   }
 
   // Resets player score, health and position. Should be called
