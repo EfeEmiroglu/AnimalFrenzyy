@@ -3,6 +3,9 @@ import 'package:animalfrenzy/enemy_manager.dart';
 import 'package:animalfrenzy/knows_game_size.dart';
 import 'package:animalfrenzy/models/chicken_details.dart';
 import 'package:animalfrenzy/models/player_data.dart';
+import 'package:animalfrenzy/widgets/overlays/game_over_menu.dart';
+import 'package:animalfrenzy/widgets/overlays/pause_button.dart';
+import 'package:animalfrenzy/widgets/overlays/pause_menu.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -197,6 +200,31 @@ class ChickenGame extends FlameGame
       playerScore.text = 'Score: ${chicken.score}';
       playerHealth.text = 'Health: ${chicken.health}%';
     }
+
+    if (chicken.health <= 0 && (!camera.shaking)) {
+      pauseEngine();
+      overlays.remove(PauseButton.ID);
+      overlays.add(GameOverMenu.ID);
+    }
+  }
+
+  @override
+  void lifeCycleStateChange(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
+        if (chicken.health > 0) {
+          pauseEngine();
+          overlays.remove(PauseButton.ID);
+          overlays.add(PauseMenu.ID);
+          break;
+        }
+    }
+
+    super.lifecycleStateChange(state);
   }
 
   void reset() {

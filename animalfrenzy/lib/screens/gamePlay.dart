@@ -1,4 +1,5 @@
 import 'package:animalfrenzy/mainMenu.dart';
+import 'package:animalfrenzy/widgets/overlays/game_over_menu.dart';
 import 'package:animalfrenzy/widgets/overlays/pause_button.dart';
 import 'package:animalfrenzy/widgets/overlays/pause_menu.dart';
 import 'package:flame/game.dart';
@@ -30,6 +31,10 @@ class GamePlay extends StatelessWidget {
                 ),
             PauseMenu.ID: (BuildContext context, ChickenGame gameRef) =>
                 PauseMenu(
+                  gameRef: gameRef,
+                ),
+            GameOverMenu.ID: (BuildContext context, ChickenGame gameRef) =>
+                GameOverMenu(
                   gameRef: gameRef,
                 ),
           },

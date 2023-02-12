@@ -1,6 +1,7 @@
 import 'package:animalfrenzy/knows_game_size.dart';
 import 'package:animalfrenzy/mainMenu.dart';
 import 'package:animalfrenzy/models/chicken_details.dart';
+import 'package:animalfrenzy/models/player_data.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/image_composition.dart';
@@ -8,6 +9,7 @@ import 'package:flame/palette.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:flame/game.dart';
+import 'package:provider/provider.dart';
 
 import 'enemy.dart';
 
@@ -26,6 +28,8 @@ class Chicken extends SpriteAnimationComponent
   static bool chickenFlipped = false;
   late SpriteAnimationComponent chicken;
   double chickenScaleFactor = 2.0;
+
+  late PlayerData _playerData;
 
   Player _player;
   PlayerTypes playerTypes;
@@ -53,6 +57,8 @@ class Chicken extends SpriteAnimationComponent
       anchor: Anchor.center,
     );
     add(shape);
+
+    _playerData = Provider.of<PlayerData>(gameRef.buildContext!, listen: false);
 
     //_playerData = Provider.of<PlayerData>(gameRef.buildContext!, listen: false);
   }
